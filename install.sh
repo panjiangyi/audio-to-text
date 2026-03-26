@@ -15,6 +15,22 @@ has_cmd() {
     command -v "$1" >/dev/null 2>&1
 }
 
+run_privileged() {
+    if [ "$(id -u)" -eq 0 ]; then
+        "$@"
+        return
+    fi
+
+    if has_cmd sudo; then
+        sudo "$@"
+        return
+    fi
+
+    log "This step requires elevated privileges, but sudo is not installed."
+    log "Re-run this script as root or install the dependency manually."
+    exit 1
+}
+
 append_path_export() {
     local target_file="$1"
 
@@ -64,34 +80,34 @@ install_ffmpeg() {
     fi
 
     if has_cmd apt-get; then
-        sudo apt-get update
-        sudo apt-get install -y ffmpeg
+        run_privileged apt-get update
+        run_privileged apt-get install -y ffmpeg
         return
     fi
 
     if has_cmd dnf; then
-        sudo dnf install -y ffmpeg
+        run_privileged dnf install -y ffmpeg
         return
     fi
 
     if has_cmd yum; then
-        sudo yum install -y epel-release || true
-        sudo yum install -y ffmpeg
+        run_privileged yum install -y epel-release || true
+        run_privileged yum install -y ffmpeg
         return
     fi
 
     if has_cmd pacman; then
-        sudo pacman -Sy --noconfirm ffmpeg
+        run_privileged pacman -Sy --noconfirm ffmpeg
         return
     fi
 
     if has_cmd zypper; then
-        sudo zypper install -y ffmpeg
+        run_privileged zypper install -y ffmpeg
         return
     fi
 
     if has_cmd apk; then
-        sudo apk add --no-cache ffmpeg
+        run_privileged apk add --no-cache ffmpeg
         return
     fi
 
