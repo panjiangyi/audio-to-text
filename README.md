@@ -5,7 +5,7 @@ Transcribe audio/video to plain text using faster-whisper.
 ## Install
 
 ```bash
-git clone https://github.com/<your-username>/audio-to-text.git
+git clone https://github.com/panjiangyi/audio-to-text.git
 cd audio-to-text
 ./install.sh
 ```
