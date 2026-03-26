@@ -10,22 +10,36 @@ cd audio-to-text
 ./install.sh
 ```
 
-**Requirements:** Python 3.12+, ffmpeg
+The installer will:
+
+- install `ffmpeg` if needed
+- install `uv` if needed
+- install the project dependencies
+- create a global `att` command in `~/.local/bin`
+- add `~/.local/bin` to your shell `PATH`
+
+If the command is not available in the current shell immediately after install, reload your shell config or open a new terminal.
 
 ## Usage
 
 ```bash
 # Basic transcription (Chinese)
-uv run att stt /path/to/audio.mp3
+att stt /path/to/audio.mp3
 
 # English with larger model
-uv run att stt /path/to/podcast.mp3 --language en --model medium
+att stt /path/to/podcast.mp3 --language en --model medium
 
 # Use GPU (requires CUDA + cuDNN)
-uv run att stt /path/to/audio.wav --device cuda --model large-v3
+att stt /path/to/audio.wav --device cuda --model large-v3
 
 # Save to file
-uv run att stt /path/to/audio.mp3 > transcript.txt
+att stt /path/to/audio.mp3 > transcript.txt
+```
+
+You can still run the local project entrypoint directly:
+
+```bash
+uv run att stt /path/to/audio.mp3
 ```
 
 ## Options
@@ -48,14 +62,8 @@ For CUDA acceleration:
 
 If cuDNN is missing, the script will automatically fall back to CPU.
 
-## Claude Code Integration
+## Notes
 
-In Claude Code, use:
-```
-/stt /path/to/audio.mp3
-```
-
-Or ask naturally:
-```
-Transcribe this audio file: /path/to/audio.mp3
-```
+- Supported audio inputs include `.wav`, `.mp3`, `.m4a`, `.aac`, `.flac`, `.ogg`, and `.opus`.
+- Video files are also supported. The CLI will extract temporary audio with `ffmpeg` before transcription.
+- In root or container environments without `sudo`, `install.sh` will run package manager commands directly.
