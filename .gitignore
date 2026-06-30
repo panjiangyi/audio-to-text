@@ -3,3 +3,4 @@ __pycache__/
 .omo/
 .venv/
 .DS_Store
+.env

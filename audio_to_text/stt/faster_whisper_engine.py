@@ -78,6 +78,7 @@ def transcribe(
     device: str = "auto",
     compute_type: str = "auto",
     vad_filter: bool = True,
+    initial_prompt: str | None = None,
 ) -> TranscriptionResult:
     """
     Transcribe an audio file using faster-whisper and return timestamped segments.
@@ -120,6 +121,7 @@ def transcribe(
         str(audio_path),
         language=language,
         vad_filter=vad_filter,
+        initial_prompt=initial_prompt,
     )
 
     out: list[WhisperSegment] = []
